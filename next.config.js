@@ -2,7 +2,7 @@
 const nextConfig = {
   // reactStrictMode: true,
   images: {
-    domains: ['img.favpng.com'],
+    domains: ['img.favpng.com', 'www.jsonkeeper.com', 'links.papareact.com'],
   },
 };
 
