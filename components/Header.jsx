@@ -4,11 +4,13 @@ import { SearchIcon, GlobelAltIcon } from '@heroicons/react/24/solid';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import { DateRangePicker } from 'react-date-range';
-
-const Header = () => {
+import { useRouter } from 'next/dist/client/router';
+const Header = ({ placeholder }) => {
   const [searchInput, setSearchInput] = useState('');
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
+  const [noOfGuests, setNoOfGuests] = useState(1);
+  const router = useRouter();
 
   const selectionRange = {
     startDate: startDate,
@@ -22,10 +24,33 @@ const Header = () => {
     setStartDate(ranges.selection.startDate);
     setEndDate(ranges.selection.endDate);
   };
+
+  //rest input
+  const resetInput = (e) => {
+    e.preventDefault();
+    setSearchInput('');
+  };
+
+  //search;
+  const search = (e) => {
+    router.push({
+      pathname: '/search',
+      query: {
+        location: searchInput,
+        startDate: startDate.toISOString(),
+        endDate: endDate.toISOString(),
+        noOfGuests,
+      },
+    });
+    setSearchInput('');
+  };
+
   return (
     <header className="sticky top-0 z-50 grid grid-cols-3 bg-white shadow-md py-5 px-5 md:px-10">
       {/*left/**/}
-      <div className="relative flex items-center h-10 cursor-pointer my-auuto">
+      <div
+        onClick={() => router.push('/')}
+        className="relative flex items-center h-10 cursor-pointer my-auuto">
         <img
           src="https://logodownload.org/wp-content/uploads/2016/10/airbnb-logo-10.png"
           layout="fill"
@@ -40,7 +65,7 @@ const Header = () => {
         <input
           className="transparent flex-grow text-sm text-gray-400 placeholder-gray-400"
           type="text"
-          placeholder="start your search"
+          placeholder={placeholder || 'Start your search'}
           style={{ outline: 'none', marginLeft: '10px' }}
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
@@ -116,9 +141,47 @@ const Header = () => {
           <DateRangePicker
             ranges={[selectionRange]}
             minDate={new Date()}
-            ramgeColors={['#FD5B61']}
+            rangeColors={['#FD5B61']}
             onChange={handleSelect}
           />
+          <div className="flex items-center border-b mb-4">
+            <h2 className="text-2xl flex-grow font-semibold">
+              Number of Guests
+            </h2>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-5 h-5">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"
+              />
+            </svg>
+            <input
+              type="number"
+              value={noOfGuests}
+              onChange={(e) => setNoOfGuests(e.target.value)}
+              min={1}
+              style={{
+                width: '40px',
+                marginLeft: '10px',
+                outline: 'none',
+                color: 'red',
+              }}
+            />
+          </div>
+          <div className="flex ">
+            <button onClick={resetInput} className="flex-grow text-gray-500">
+              Cancel
+            </button>
+            <button onClick={search} className="flex-grow text-red-400">
+              Search
+            </button>
+          </div>
         </div>
       )}
     </header>
