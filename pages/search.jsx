@@ -3,8 +3,10 @@ import React from 'react';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import { format } from 'date-fns';
+import InfoCard from '../components/InfoCard';
 
-const search = () => {
+const search = ({ searchResult }) => {
+  console.log(searchResult);
   const router = useRouter();
   const { location, startDate, endDate, noOfGuests } = router.query;
   const formattedStartDate = format(new Date(startDate), 'dd MMMM yy');
@@ -28,6 +30,10 @@ const search = () => {
             <p className="button">Rooms and Beds</p>
             <p className="button">More filter</p>
           </div>
+
+          {searchResult.map((item) => (
+            <InfoCard />
+          ))}
         </section>
       </main>
 
@@ -37,3 +43,16 @@ const search = () => {
 };
 
 export default search;
+
+//server side rendering;
+export async function getServerSideProps() {
+  const searchResult = await fetch('https://links.papareact.com/isz').then(
+    (res) => res.json()
+  );
+
+  return {
+    props: {
+      searchResult,
+    },
+  };
+}
