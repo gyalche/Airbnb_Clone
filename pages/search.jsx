@@ -4,13 +4,14 @@ import Footer from '../components/Footer';
 import Header from '../components/Header';
 import { format } from 'date-fns';
 import InfoCard from '../components/InfoCard';
-
-const search = ({ searchResult }) => {
-  console.log(searchResult);
+import searchData from '../searchData';
+const search = () => {
+  // console.log(searchResult);
+  console.log(searchData);
   const router = useRouter();
   const { location, startDate, endDate, noOfGuests } = router.query;
-  const formattedStartDate = format(new Date(startDate), 'dd MMMM yy');
-  const formattedEndDate = format(new Date(endDate), 'dd MMMM yy');
+  const formattedStartDate = format(new Date(startDate), 'yyyy-MM-dd');
+  const formattedEndDate = format(new Date(endDate), 'yyyy-MM-dd');
 
   const range = `${formattedStartDate} - ${formattedEndDate}`;
   return (
@@ -31,9 +32,22 @@ const search = ({ searchResult }) => {
             <p className="button">More filter</p>
           </div>
 
-          {searchResult.map((item) => (
-            <InfoCard />
-          ))}
+          <div className="flex flex-col">
+            {searchData.map(
+              ({ img, location, title, description, star, price, total }) => (
+                <InfoCard
+                  key={img}
+                  img={img}
+                  location={location}
+                  title={title}
+                  description={description}
+                  star={star}
+                  price={price}
+                  total={total}
+                />
+              )
+            )}
+          </div>
         </section>
       </main>
 
@@ -45,14 +59,14 @@ const search = ({ searchResult }) => {
 export default search;
 
 //server side rendering;
-export async function getServerSideProps() {
-  const searchResult = await fetch('https://links.papareact.com/isz').then(
-    (res) => res.json()
-  );
+// export async function getServerSideProps() {
+//   const searchResult = await fetch('https://links.papareact.com/isz').then(
+//     (res) => res.json()
+//   );
 
-  return {
-    props: {
-      searchResult,
-    },
-  };
-}
+//   return {
+//     props: {
+//       searchResult,
+//     },
+//   };
+// }
