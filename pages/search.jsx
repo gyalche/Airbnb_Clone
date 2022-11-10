@@ -5,6 +5,7 @@ import Header from '../components/Header';
 import { format } from 'date-fns';
 import InfoCard from '../components/InfoCard';
 import searchData from '../searchData';
+import ReactMap from '../components/ReactMap';
 const search = () => {
   // console.log(searchResult);
   console.log(searchData);
@@ -48,6 +49,9 @@ const search = () => {
               )
             )}
           </div>
+        </section>
+        <section className="hidden sm:inline-flex sm:min-w-[600px]">
+          <ReactMap searchResult={searchData} />
         </section>
       </main>
 
